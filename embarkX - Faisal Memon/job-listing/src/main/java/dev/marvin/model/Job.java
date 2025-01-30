@@ -22,9 +22,10 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true)
+    @Column(unique = true, updatable = false, nullable = false)
     @Builder.Default
     private String jobId = UUID.randomUUID().toString();
+    @Column(unique = true)
     private String title;
     private String description;
     private BigDecimal minSalary;
@@ -34,4 +35,7 @@ public class Job {
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isDeleted = false;
 }

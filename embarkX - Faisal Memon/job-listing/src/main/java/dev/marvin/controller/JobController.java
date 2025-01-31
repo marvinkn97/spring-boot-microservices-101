@@ -55,7 +55,7 @@ public class JobController {
     }
 
     @PatchMapping("/{jobId}")
-    public ResponseEntity<JobResponse> update(@PathVariable("jobId") String jobId, @RequestBody JobUpdateRequest jobUpdateRequest){
-        return null;
+    public ResponseEntity<JobResponse> update(@PathVariable("jobId") String jobId, @RequestBody JobUpdateRequest jobUpdateRequest) {
+        return ResponseEntity.ok(jobService.update(jobId, jobUpdateRequest));
     }
 }

@@ -31,7 +31,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public JobResponse createJob(JobRequest jobRequest) {
-        log.info("Saving a new job: {}", jobRequest);
+        log.info("Creating a new job: {}", jobRequest);
         try {
             Job job = Mapper.mapToEntity(jobRequest);
             Job savedJob = jobRepository.save(job);

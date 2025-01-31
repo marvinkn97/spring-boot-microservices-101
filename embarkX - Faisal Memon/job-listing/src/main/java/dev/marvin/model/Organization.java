@@ -8,30 +8,28 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.UUID;
 
 @Entity
-@Table(name = "t_jobs")
+@Table(name = "t_organizations")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Job {
+public class Organization {
     @Id
-    @SequenceGenerator(name = "job_id_sequence", sequenceName = "job_id_sequence")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "job_id_sequence")
+    @SequenceGenerator(name = "org_id_sequence", sequenceName = "org_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "org_id_sequence")
     private Integer id;
     @Column(unique = true, updatable = false, nullable = false)
     @Builder.Default
-    private String jobId = UUID.randomUUID().toString();
+    private String orgId = UUID.randomUUID().toString();
     @Column(unique = true)
-    private String title;
+    private String name;
     private String description;
-    private BigDecimal minSalary;
-    private BigDecimal maxSalary;
-    private String location;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -40,7 +38,6 @@ public class Job {
     @Builder.Default
     private Boolean isDeleted = false;
 
-    @ManyToOne
-    @JoinColumn(name = "org_id_fk")
-    private Organization organization;
+    @OneToMany(orphanRemoval = true, mappedBy = "organization")
+    Collection<Job> jobs = new HashSet<>();
 }

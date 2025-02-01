@@ -55,8 +55,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void deleteReview(String reviewId) {
-        Review review = reviewRepository.findByReviewId(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+        Review review = reviewRepository.getByReviewId(reviewId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
         review.setIsDeleted(true);
         reviewRepository.save(review);
@@ -65,8 +65,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewResponse updateReview(String reviewId, ReviewUpdateRequest reviewUpdateRequest) {
-        Review review = reviewRepository.findByReviewId(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+        Review review = reviewRepository.getByReviewId(reviewId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
         review.setRating(reviewUpdateRequest.rating());
         review.setComment(reviewUpdateRequest.comment());

@@ -1,11 +1,9 @@
 package dev.marvin.util;
 
-import dev.marvin.dto.JobRequest;
-import dev.marvin.dto.JobResponse;
-import dev.marvin.dto.OrganizationRequest;
-import dev.marvin.dto.OrganizationResponse;
+import dev.marvin.dto.*;
 import dev.marvin.model.Job;
 import dev.marvin.model.Organization;
+import dev.marvin.model.Review;
 
 public class Mapper {
 
@@ -41,6 +39,16 @@ public class Mapper {
                 organization.getOrgId(),
                 organization.getName(),
                 organization.getDescription()
+        );
+    }
+
+    public static ReviewResponse toDto(Review review) {
+        return new ReviewResponse(
+                review.getReviewId(),
+                null,
+                review.getRating(),
+                review.getComment(),
+                review.getOrganization().getOrgId()
         );
     }
 }

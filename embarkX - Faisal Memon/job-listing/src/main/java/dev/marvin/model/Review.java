@@ -9,27 +9,25 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.UUID;
 
 @Entity
-@Table(name = "t_organizations")
+@Table(name = "t_reviews")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Organization {
+public class Review {
     @Id
-    @SequenceGenerator(name = "org_id_sequence", sequenceName = "org_id_sequence")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "org_id_sequence")
+    @SequenceGenerator(name = "review_id_sequence", sequenceName = "review_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_id_sequence")
     private Integer id;
     @Column(unique = true, updatable = false, nullable = false)
     @Builder.Default
-    private String orgId = UUID.randomUUID().toString();
-    @Column(unique = true)
-    private String name;
-    private String description;
+    private String reviewId = UUID.randomUUID().toString();
+    private String comment;
+    private Integer rating;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -38,9 +36,7 @@ public class Organization {
     @Builder.Default
     private Boolean isDeleted = false;
 
-    @OneToMany(mappedBy = "organization")
-    Collection<Job> jobs = new HashSet<>();
-
-    @OneToMany(mappedBy = "organization")
-    Collection<Review> reviews = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "org_id")
+    private Organization organization;
 }

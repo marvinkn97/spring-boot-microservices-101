@@ -1,18 +1,27 @@
 package dev.marvin;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestContainersTest {
-    protected final static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
+ class TestContainersTest {
+    protected static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("test_db")
             .withUsername("root")
             .withPassword("password");
+
+    @DynamicPropertySource
+    static void registerDynamicDBProps(DynamicPropertyRegistry dynamicPropertyRegistry){
+        dynamicPropertyRegistry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        dynamicPropertyRegistry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        dynamicPropertyRegistry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+    }
 
     @BeforeAll
     static void startContainer() {
@@ -24,10 +33,20 @@ public class TestContainersTest {
         postgreSQLContainer.stop();
     }
 
-    @DynamicPropertySource
-    static void registerDynamicDBProps(DynamicPropertyRegistry dynamicPropertyRegistry){
-        dynamicPropertyRegistry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        dynamicPropertyRegistry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-        dynamicPropertyRegistry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+    @Test
+    void testContainerIsRunning() {
+        Assertions.assertTrue(postgreSQLContainer.isRunning(), "PostgreSQL TestContainer should be running");
+    }
+
+    @Test
+    void testDatabaseConnection() throws SQLException {
+        String jdbcUrl = postgreSQLContainer.getJdbcUrl();
+        String username = postgreSQLContainer.getUsername();
+        String password = postgreSQLContainer.getPassword();
+
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+            Assertions.assertNotNull(connection, "Connection should not be null");
+            Assertions.assertTrue(connection.isValid(2), "Database connection should be valid");
+        }
     }
 }

@@ -1,4 +1,4 @@
-package dev.marvin.serviceImpl;
+package dev.marvin.service.impl;
 
 import dev.marvin.dto.JobRequest;
 import dev.marvin.dto.JobResponse;

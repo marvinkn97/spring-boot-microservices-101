@@ -6,6 +6,7 @@ import dev.marvin.model.Organization;
 import dev.marvin.model.Review;
 
 public class Mapper {
+    private Mapper(){}
 
     public static Job mapToEntity(JobRequest jobRequest) {
         return Job.builder()
@@ -48,7 +49,7 @@ public class Mapper {
                 null,
                 review.getRating(),
                 review.getComment(),
-                review.getOrganization().getOrgId()
+                review.getOrganization().getName()
         );
     }
 }

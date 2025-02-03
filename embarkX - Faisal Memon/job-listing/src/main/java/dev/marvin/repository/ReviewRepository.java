@@ -12,7 +12,9 @@ import java.util.Optional;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
-    @Query("SELECT r FROM Review r WHERE r.reviewId = :reviewId")
+    @Query("SELECT r FROM Review r WHERE r.reviewId = :reviewId AND r.isDeleted = false")
     Optional<Review> getByReviewId(@Param("reviewId") String reviewId);
-    List<Review> findByOrganizationId(String organizationId);
+
+    @Query("SELECT r FROM Review r WHERE r.organization.orgId = :orgId AND r.isDeleted = false")
+    List<Review> findByOrganizationId(@Param("orgId") String organizationId);
 }

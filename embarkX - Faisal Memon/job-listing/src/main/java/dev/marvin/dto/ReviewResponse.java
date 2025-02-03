@@ -5,6 +5,6 @@ public record ReviewResponse(
         String reviewerId,
         Integer rating,
         String comment,
-        String organizationId
+        String organizationName
 ) {
 }

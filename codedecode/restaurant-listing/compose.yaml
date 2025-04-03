@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    container_name: restaurant-listing-db
+    environment:
+      - 'POSTGRES_DB=restaurant_listing_db'
+      - 'POSTGRES_PASSWORD=password'
+      - 'POSTGRES_USER=postgres'
+      - 'PGDATA: /var/lib/postgres/data'
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - restaurant-listing
+
+volumes:
+  postgres:
+    name: restaurant-listing-volume
+    driver: local
+
+networks:
+  restaurant-listing:
+    name: restaurant-listing-network
+    driver: bridge
